@@ -1,5 +1,14 @@
-import { createContext, useContext, useReducer, type Dispatch, type ReactNode } from 'react'
-import { catalog } from '../data/catalog'
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useReducer,
+  useState,
+  type Dispatch,
+  type ReactNode,
+} from 'react'
+import { fetchCatalog } from '../data/apiCatalog'
+import { catalog as localCatalog } from '../data/catalog'
 import type { Catalog } from '../types/catalog'
 import { bundleReducer, initialState, type BundleAction, type BundleState } from './bundleState'
 
@@ -11,6 +20,11 @@ interface BundleContextValue {
 
 const BundleContext = createContext<BundleContextValue | null>(null)
 
+/**
+ * Renders instantly from the bundled local catalog, then quietly checks the
+ * bonus API in the background. If it answers, its catalog takes over; if it
+ * doesn't (no backend running, no Docker, no deploy), nothing changes.
+ */
 export function BundleProvider({
   children,
   initial,
@@ -18,7 +32,18 @@ export function BundleProvider({
   children: ReactNode
   initial?: BundleState
 }) {
-  const [state, dispatch] = useReducer(bundleReducer, initial ?? initialState(catalog))
+  const [catalog, setCatalog] = useState(localCatalog)
+  const [state, dispatch] = useReducer(bundleReducer, initial ?? initialState(localCatalog))
+
+  useEffect(() => {
+    let cancelled = false
+    fetchCatalog().then((remote) => {
+      if (remote && !cancelled) setCatalog(remote)
+    })
+    return () => {
+      cancelled = true
+    }
+  }, [])
 
   return (
     <BundleContext.Provider value={{ catalog, state, dispatch }}>{children}</BundleContext.Provider>
