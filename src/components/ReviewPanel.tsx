@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from 'react'
 import { useBundle } from '../store/BundleProvider'
 import { saveState } from '../store/persistence'
 import { formatPrice, groupedReviewLines, totals } from '../store/selectors'
+import { CheckoutModal } from './CheckoutModal'
 import { GuaranteeBadge } from './GuaranteeBadge'
 import { PriceBlock } from './PriceBlock'
 import { ReviewLine } from './ReviewLine'
@@ -16,6 +17,7 @@ import { ShippingIcon } from './ShippingIcon'
  */
 export function ReviewPanel() {
   const { catalog, state } = useBundle()
+  const [checkoutOpen, setCheckoutOpen] = useState(false)
   const [saveResult, setSaveResult] = useState<'idle' | 'saved' | 'failed'>('idle')
   const savedTimer = useRef<ReturnType<typeof setTimeout>>(undefined)
 
@@ -144,6 +146,7 @@ export function ReviewPanel() {
 
         <button
           type="button"
+          onClick={() => setCheckoutOpen(true)}
           className="mt-3 w-full rounded bg-brand py-[13px] text-[16px] font-semibold text-white transition-colors hover:bg-brand/90"
         >
           Checkout
@@ -158,6 +161,8 @@ export function ReviewPanel() {
           {saveLabel}
         </button>
       </div>
+
+      <CheckoutModal open={checkoutOpen} total={total} onClose={() => setCheckoutOpen(false)} />
     </div>
   )
 }
