@@ -4,22 +4,27 @@ A multi-step bundle builder for a home security system. Shoppers assemble camera
 
 ## Getting started
 
-The app runs entirely on its own, no backend required:
-
 ```bash
 git clone https://github.com/Hamicch/Bundle-Builder.git
 cd Bundle-Builder
 npm install
+```
+
+### 1. Frontend
+
+Runs entirely on its own, no backend required:
+
+```bash
 npm run dev
 ```
 
 Open [http://localhost:5173](http://localhost:5173).
 
-### With the bonus API running too
+### 2. Backend (optional)
 
-A small Express server can serve the same catalog over HTTP; the frontend
-picks it up automatically when it's reachable and falls back to the local
-copy otherwise. Run it alongside the dev server in a second terminal:
+A small Express server can serve the same catalog over HTTP. The frontend
+picks it up automatically when it's reachable and falls back to its local
+copy otherwise, so this step can be skipped. In a second terminal:
 
 ```bash
 npm run server
@@ -27,6 +32,18 @@ npm run server
 
 By default the frontend looks for it at `http://localhost:3001`. Copy
 `.env.example` to `.env` if you need to point it somewhere else.
+
+### 3. Docker (optional, replaces steps 1 and 2)
+
+`docker compose up` builds and runs the frontend (behind nginx) and the API
+as separate containers in one step, with nginx proxying `/api` straight to
+the backend container:
+
+```bash
+docker compose up
+```
+
+Open [http://localhost:8080](http://localhost:8080).
 
 ### Scripts
 
