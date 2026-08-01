@@ -1,1 +1,30 @@
+@import '@fontsource-variable/dm-sans';
 @import 'tailwindcss';
+
+@theme {
+  --font-sans: 'Gilroy', 'DM Sans Variable', 'DM Sans', ui-sans-serif, system-ui, sans-serif;
+
+  --color-brand: #4e2fd2;
+  --color-brand-border: rgb(78 47 210 / 0.7);
+  --color-ink: #1f1f1f;
+  --color-price: #575757;
+  --color-strike: #d8392b;
+  --color-success: #0aa288;
+  --color-divider: #ced6de;
+  --color-lavender: #edf4ff;
+
+  --radius-card: 10px;
+
+  --tracking-body: 0.6px;
+}
+
+body {
+  @apply bg-white font-sans text-ink antialiased;
+}
+
+button:not(:disabled) {
+  cursor: pointer;
+}
+button:disabled {
+  cursor: not-allowed;
+}
