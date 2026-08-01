@@ -1,5 +1,7 @@
 # Bundle Builder
 
+[![CI](https://github.com/Hamicch/Bundle-Builder/actions/workflows/ci.yml/badge.svg)](https://github.com/Hamicch/Bundle-Builder/actions/workflows/ci.yml)
+
 A multi-step bundle builder for a home security system. Shoppers assemble cameras, a plan, sensors, and extras in a four-step accordion while a live review panel keeps totals in sync. Built with React, TypeScript, and Tailwind from [this Figma design](https://www.figma.com/design/JYf61etQVqeseX7oY5alGz/Frontend-Test-Figma?node-id=68-8088).
 
 ## Getting started
@@ -47,17 +49,16 @@ Open [http://localhost:8080](http://localhost:8080).
 
 ### Scripts
 
-| Command                 | What it does                        |
-| ------------------------ | ------------------------------------ |
-| `npm run dev`            | Start the frontend dev server        |
-| `npm run server`         | Start the bonus API server           |
-| `npm test`                | Run the test suite (Vitest + RTL)    |
-| `npm run lint`           | Lint with oxlint                     |
-| `npm run format:check`   | Verify Prettier formatting           |
-| `npm run typecheck`      | Type-check without emitting          |
-| `npm run build`          | Type-check and build for production  |
-| `npm run preview`        | Serve the production build           |
-
+| Command                | What it does                        |
+| ---------------------- | ----------------------------------- |
+| `npm run dev`          | Start the frontend dev server       |
+| `npm run server`       | Start the bonus API server          |
+| `npm test`             | Run the test suite (Vitest + RTL)   |
+| `npm run lint`         | Lint with oxlint                    |
+| `npm run format:check` | Verify Prettier formatting          |
+| `npm run typecheck`    | Type-check without emitting         |
+| `npm run build`        | Type-check and build for production |
+| `npm run preview`      | Serve the production build          |
 
 ## How it works
 
@@ -77,4 +78,3 @@ Open [http://localhost:8080](http://localhost:8080).
 - Color options render as small solid swatches rather than a cropped product photo, matching the brief's description of a swatch/thumbnail more literally.
 - Camera/shield/sensor/grid icons come from Lucide rather than hand-matched artwork. They're close enough at this size to the design's icons, and pulling from one bundled set avoids maintaining one-off SVGs for four small glyphs.
 - The bonus API is a genuinely separate Node/Express service rather than a platform-specific function, so it deploys anywhere and isn't tied to how the frontend is hosted. It's optional by design: the frontend never depends on it being up, it just upgrades to live data when it is.
-
