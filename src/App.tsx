@@ -1,20 +1,52 @@
+import { useEffect, useMemo, useState } from 'react'
 import { BuilderAccordion } from './components/BuilderAccordion'
 import { ReviewPanel } from './components/ReviewPanel'
-import { catalog } from './data/catalog'
+import { fetchCatalog } from './data/apiCatalog'
+import { catalog as localCatalog } from './data/catalog'
 import { BundleProvider } from './store/BundleProvider'
+import { initialState } from './store/bundleState'
 import { loadSavedState } from './store/persistence'
+import type { Catalog } from './types/catalog'
 
 /**
- * The design is a two-column layout: the step-by-step builder on the left,
- * the live review panel on the right, collapsing to a single stacked
- * column below desktop. A shopper's saved system (see the "Save my system
- * for later" link) restores here on load; otherwise it's the seeded state.
+ * Resolves the catalog once at boot — the bonus API when it answers, the
+ * bundled copy otherwise — and only then derives state from it. Settling on
+ * a single catalog up front (rather than swapping one in after the fact)
+ * means the restored quantities and the rendered catalog are always
+ * validated against the same source.
+ *
+ * The design itself is a two-column layout: the step-by-step builder on the
+ * left, the live review panel on the right, stacking below desktop. A saved
+ * system (via "Save my system for later") is restored here on load.
  */
 function App() {
-  const restored = loadSavedState(catalog)
+  const [catalog, setCatalog] = useState<Catalog | null>(null)
+
+  useEffect(() => {
+    let cancelled = false
+    fetchCatalog().then((remote) => {
+      if (!cancelled) setCatalog(remote ?? localCatalog)
+    })
+    return () => {
+      cancelled = true
+    }
+  }, [])
+
+  const initial = useMemo(
+    () => (catalog ? (loadSavedState(catalog) ?? initialState(catalog)) : null),
+    [catalog],
+  )
+
+  if (!catalog || !initial) {
+    return (
+      <main className="mx-auto max-w-[1196px] px-4 py-8" aria-busy="true">
+        <p className="text-center text-[14px] font-medium text-ink/60">Loading your builder…</p>
+      </main>
+    )
+  }
 
   return (
-    <BundleProvider initial={restored ?? undefined}>
+    <BundleProvider catalog={catalog} initial={initial}>
       <main className="mx-auto max-w-[1196px] px-4 py-8">
         <h1 className="mb-4 text-center text-[24px] font-semibold md:sr-only">
           Let&rsquo;s get started!

@@ -1,16 +1,6 @@
-import {
-  createContext,
-  useContext,
-  useEffect,
-  useReducer,
-  useState,
-  type Dispatch,
-  type ReactNode,
-} from 'react'
-import { fetchCatalog } from '../data/apiCatalog'
-import { catalog as localCatalog } from '../data/catalog'
+import { createContext, useContext, useReducer, type Dispatch, type ReactNode } from 'react'
 import type { Catalog } from '../types/catalog'
-import { bundleReducer, initialState, type BundleAction, type BundleState } from './bundleState'
+import { bundleReducer, type BundleAction, type BundleState } from './bundleState'
 
 interface BundleContextValue {
   catalog: Catalog
@@ -21,29 +11,21 @@ interface BundleContextValue {
 const BundleContext = createContext<BundleContextValue | null>(null)
 
 /**
- * Renders instantly from the bundled local catalog, then quietly checks the
- * bonus API in the background. If it answers, its catalog takes over; if it
- * doesn't (no backend running, no Docker, no deploy), nothing changes.
+ * Holds the catalog and reducer state for the tree. Both are already
+ * resolved by the time this mounts (see App), so it stays a plain holder
+ * with no fetching or catalog swapping of its own — which is what keeps the
+ * rendered catalog and the derived state from ever disagreeing.
  */
 export function BundleProvider({
-  children,
+  catalog,
   initial,
+  children,
 }: {
+  catalog: Catalog
+  initial: BundleState
   children: ReactNode
-  initial?: BundleState
 }) {
-  const [catalog, setCatalog] = useState(localCatalog)
-  const [state, dispatch] = useReducer(bundleReducer, initial ?? initialState(localCatalog))
-
-  useEffect(() => {
-    let cancelled = false
-    fetchCatalog().then((remote) => {
-      if (remote && !cancelled) setCatalog(remote)
-    })
-    return () => {
-      cancelled = true
-    }
-  }, [])
+  const [state, dispatch] = useReducer(bundleReducer, initial)
 
   return (
     <BundleContext.Provider value={{ catalog, state, dispatch }}>{children}</BundleContext.Provider>

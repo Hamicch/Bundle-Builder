@@ -4,9 +4,9 @@ import { describe, expect, it } from 'vitest'
 import App from '../App'
 
 describe('review panel ↔ builder sync', () => {
-  it('renders the seeded design state', () => {
+  it('renders the seeded design state', async () => {
     render(<App />)
-    expect(screen.getByText('Your security system')).toBeInTheDocument()
+    expect(await screen.findByText('Your security system')).toBeInTheDocument()
     expect(screen.getByText('$187.89')).toBeInTheDocument()
     expect(screen.getByText('$238.81')).toBeInTheDocument()
     expect(screen.getByText(/saving \$50\.92/)).toBeInTheDocument()
@@ -19,7 +19,7 @@ describe('review panel ↔ builder sync', () => {
     const user = userEvent.setup()
     render(<App />)
 
-    const card = screen.getByTestId('card-wyze-cam-v4')
+    const card = await screen.findByTestId('card-wyze-cam-v4')
     await user.click(within(card).getByRole('button', { name: /increase wyze cam v4 white/i }))
 
     const reviewLine = screen.getByTestId('review-wyze-cam-v4:white')
@@ -36,7 +36,7 @@ describe('review panel ↔ builder sync', () => {
     const user = userEvent.setup()
     render(<App />)
 
-    const card = screen.getByTestId('card-wyze-cam-pan-v3')
+    const card = await screen.findByTestId('card-wyze-cam-pan-v3')
     await user.click(within(card).getByRole('button', { name: 'Black' }))
     expect(within(card).getByText('0')).toBeInTheDocument()
     expect(screen.getByTestId('review-wyze-cam-pan-v3:white')).toBeInTheDocument()
@@ -65,9 +65,9 @@ describe('review panel ↔ builder sync', () => {
     expect(screen.getByTestId('review-wyze-cam-pan-v3:black')).toBeInTheDocument()
   })
 
-  it('required Sense Hub stepper is disabled', () => {
+  it('required Sense Hub stepper is disabled', async () => {
     render(<App />)
-    const hubLine = screen.getByTestId('review-wyze-sense-hub')
+    const hubLine = await screen.findByTestId('review-wyze-sense-hub')
     expect(within(hubLine).getByRole('button', { name: /decrease/i })).toBeDisabled()
     expect(within(hubLine).getByRole('button', { name: /increase/i })).toBeDisabled()
     expect(within(hubLine).getByText('FREE')).toBeInTheDocument()
@@ -77,7 +77,7 @@ describe('review panel ↔ builder sync', () => {
     const user = userEvent.setup()
     render(<App />)
 
-    expect(screen.getByRole('button', { name: /choose your cameras/i })).toHaveAttribute(
+    expect(await screen.findByRole('button', { name: /choose your cameras/i })).toHaveAttribute(
       'aria-expanded',
       'true',
     )
@@ -95,7 +95,7 @@ describe('review panel ↔ builder sync', () => {
   it('checkout opens the placeholder confirmation', async () => {
     const user = userEvent.setup()
     render(<App />)
-    await user.click(screen.getByRole('button', { name: 'Checkout' }))
+    await user.click(await screen.findByRole('button', { name: 'Checkout' }))
     expect(screen.getByText(/checkout isn[’']t wired up/i)).toBeInTheDocument()
   })
 })

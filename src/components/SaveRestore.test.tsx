@@ -12,7 +12,7 @@ describe('save my system for later', () => {
     const user = userEvent.setup()
     const first = render(<App />)
 
-    const card = screen.getByTestId('card-wyze-cam-v4')
+    const card = await screen.findByTestId('card-wyze-cam-v4')
     const inc = within(card).getByRole('button', { name: /increase/i })
     await user.click(inc)
     await user.click(inc)
@@ -23,13 +23,13 @@ describe('save my system for later', () => {
     first.unmount()
 
     render(<App />)
-    const cardAgain = screen.getByTestId('card-wyze-cam-v4')
+    const cardAgain = await screen.findByTestId('card-wyze-cam-v4')
     expect(within(cardAgain).getByText('3')).toBeInTheDocument()
     expect(screen.getByText('$243.85')).toBeInTheDocument()
   })
 
-  it('first-ever visit renders the seeded design state', () => {
+  it('first-ever visit renders the seeded design state', async () => {
     render(<App />)
-    expect(screen.getByText('$187.89')).toBeInTheDocument()
+    expect(await screen.findByText('$187.89')).toBeInTheDocument()
   })
 })
