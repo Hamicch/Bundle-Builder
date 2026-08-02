@@ -39,8 +39,16 @@ function App() {
 
   if (!catalog || !initial) {
     return (
-      <main className="mx-auto max-w-[1196px] px-4 py-8" aria-busy="true">
-        <p className="text-center text-[14px] font-medium text-ink/60">Loading your builder…</p>
+      <main
+        className="flex min-h-screen items-center justify-center"
+        role="status"
+        aria-busy="true"
+      >
+        <span
+          className="size-8 animate-spin rounded-full border-2 border-brand/25 border-t-brand"
+          aria-hidden="true"
+        />
+        <span className="sr-only">Loading your builder…</span>
       </main>
     )
   }
