@@ -1,6 +1,8 @@
 import type { Catalog } from '../types/catalog'
 
-const API_BASE = import.meta.env.VITE_API_URL ?? ''
+// Trailing slashes are stripped so a base URL like "https://host/" can't
+// produce a double-slashed "host//api/catalog" request.
+const API_BASE = (import.meta.env.VITE_API_URL ?? '').replace(/\/+$/, '')
 
 /**
  * The bonus API mirrors the local catalog. When it's reachable (backend
