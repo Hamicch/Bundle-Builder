@@ -10,7 +10,7 @@ const products = JSON.parse(readFileSync(join(__dirname, '../src/data/products.j
 const app = express()
 app.use(cors())
 
-app.get('/api/products', (_req, res) => {
+app.get('/api/catalog', (_req, res) => {
   res.json(products)
 })
 
