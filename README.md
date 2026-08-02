@@ -4,6 +4,8 @@
 
 A multi-step bundle builder for a home security system. Shoppers assemble cameras, a plan, sensors, and extras in a four-step accordion while a live review panel keeps totals in sync. Built with React, TypeScript, and Tailwind from [this Figma design](https://www.figma.com/design/JYf61etQVqeseX7oY5alGz/Frontend-Test-Figma?node-id=68-8088).
 
+**Live demo:** [app](https://bundle-builder-production-7259.up.railway.app) · [API](https://bundle-builder-backend-production.up.railway.app/api/catalog)
+
 ## Getting started
 
 ```bash
@@ -80,3 +82,4 @@ Open [http://localhost:8080](http://localhost:8080).
 - The bonus API is a genuinely separate Node/Express service rather than a platform-specific function, so it deploys anywhere and isn't tied to how the frontend is hosted. It's optional by design: the frontend never depends on it being up, it just upgrades to live data when it is.
 - The catalog is resolved once before the first render (the API if it answers, the bundled JSON otherwise), and all state is derived from that single resolved catalog. This shows a brief loading state on boot and keeps the restored quantities and the rendered catalog validated against the same source.
 - In production the frontend and API run as two separate services on their own domains, and the frontend calls the API directly through `VITE_API_URL`, which is baked into the build at build time. The nginx `/api` proxy is only used under Docker Compose, where the two containers share a network. CORS is left open on the API, which is fine for a demo but would be scoped to the frontend's origin for a real deployment.
+- Images are static assets the frontend serves; the catalog carries only root-relative paths (`/images/...`), so the backend stays pure data. In production they'd sit in object storage behind a CDN, with the catalog returning absolute, optimized URLs.
